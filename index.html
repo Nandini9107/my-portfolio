@@ -2,173 +2,158 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
+<title>Sorting Visualizer - Nandini</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background: #0a0f1c;
-        color: white;
-        scroll-behavior: smooth;
-    }
+body {
+    background: #0a0f1c;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+}
 
-    /* NAV */
-    nav {
-        position: fixed;
-        width: 100%;
-        top: 0;
-        background: rgba(10,15,28,0.7);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-        padding: 15px;
-        z-index: 1000;
-    }
+h1 {
+    margin-top: 20px;
+}
 
-    nav a {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        transition: 0.3s;
-    }
+#array {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 350px;
+    margin: 20px;
+}
 
-    nav a:hover {
-        color: #00d4ff;
-    }
+/* BARS */
+.bar {
+    width: 20px;
+    margin: 2px;
+    background: linear-gradient(180deg, #00d4ff, #0077ff);
+    border-radius: 5px;
+    transition: height 0.3s ease, background 0.3s;
+}
 
-    /* HERO */
-    .hero {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background: radial-gradient(circle at top, #1e3a8a, #0a0f1c);
-    }
+.bar.compare {
+    background: red;
+}
 
-    .hero h1 {
-        font-size: 60px;
-        margin: 0;
-        animation: glow 2s ease-in-out infinite alternate;
-    }
+.bar.swap {
+    background: orange;
+}
 
-    @keyframes glow {
-        from { text-shadow: 0 0 10px #00d4ff; }
-        to { text-shadow: 0 0 25px #00d4ff; }
-    }
+.bar.sorted {
+    background: #00ff88;
+}
 
-    .hero p {
-        color: #94a3b8;
-        font-size: 18px;
-    }
+.bar:hover {
+    box-shadow: 0 0 10px #00d4ff;
+}
 
-    /* SECTIONS */
-    section {
-        padding: 100px 20px;
-        text-align: center;
-    }
+/* CONTROLS */
+.controls {
+    margin: 20px;
+}
 
-    .card-container {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
+button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    background: #00d4ff;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
 
-    .card {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        padding: 20px;
-        width: 260px;
-        border-radius: 15px;
-        transition: 0.3s;
-    }
+button:hover {
+    background: white;
+}
 
-    .card:hover {
-        transform: scale(1.05);
-        border-color: #00d4ff;
-    }
-
-    /* BUTTON */
-    .btn {
-        padding: 10px 20px;
-        border: none;
-        background: #00d4ff;
-        color: black;
-        font-weight: bold;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    .btn:hover {
-        background: white;
-    }
-
-    footer {
-        padding: 20px;
-        text-align: center;
-        color: #64748b;
-    }
+input {
+    margin-top: 10px;
+}
 </style>
 </head>
 
 <body>
 
-<nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-</nav>
+<h1>Sorting Visualizer</h1>
+<p>By Nandini • Interactive Algorithm Learning Tool</p>
 
-<div class="hero" id="home">
-    <h1>Your Name</h1>
-    <p>Web Developer | Designer | Learner</p>
+<div class="controls">
+    <button onclick="generateArray()">New Array</button>
+    <button onclick="bubbleSort()">Start Sorting</button>
+    <br>
+    <label>Speed</label>
+    <input type="range" id="speed" min="1" max="100" value="50">
 </div>
 
-<section id="about">
-    <h2>About Me</h2>
-    <p style="max-width:600px;margin:auto;color:#94a3b8;">
-        I am learning web development and building real-world projects using HTML, CSS, and JavaScript.
-    </p>
-</section>
+<div id="array"></div>
 
-<section id="projects">
-    <h2>Projects</h2>
+<script>
+let speed = 100;
 
-    <div class="card-container">
+/* SPEED CONTROL */
+document.getElementById("speed").addEventListener("input", function() {
+    speed = 200 - this.value;
+});
 
-        <div class="card">
-            <h3>🌿 Skincare Website</h3>
-            <p>Aesthetic product landing page</p>
-        </div>
+/* DELAY */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-        <div class="card">
-            <h3>📱 Social Media UI</h3>
-            <p>Instagram-style layout design</p>
-        </div>
+/* GENERATE ARRAY */
+function generateArray() {
+    const container = document.getElementById("array");
+    container.innerHTML = "";
 
-        <div class="card">
-            <h3>💻 Portfolio</h3>
-            <p>This website itself</p>
-        </div>
+    for (let i = 0; i < 30; i++) {
+        let value = Math.floor(Math.random() * 300) + 20;
 
-    </div>
-</section>
+        let bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = value + "px";
 
-<section id="contact">
-    <h2>Contact</h2>
-    <button class="btn" onclick="alert('Thanks for connecting!')">Say Hello</button>
-</section>
+        container.appendChild(bar);
+    }
+}
 
-<footer>
-    Built with passion 🚀
-</footer>
+/* BUBBLE SORT */
+async function bubbleSort() {
+    let bars = document.querySelectorAll(".bar");
+
+    for (let i = 0; i < bars.length; i++) {
+        for (let j = 0; j < bars.length - i - 1; j++) {
+
+            bars[j].classList.add("compare");
+            bars[j+1].classList.add("compare");
+
+            await sleep(speed);
+
+            let val1 = parseInt(bars[j].style.height);
+            let val2 = parseInt(bars[j+1].style.height);
+
+            if (val1 > val2) {
+                bars[j].classList.add("swap");
+                bars[j+1].classList.add("swap");
+
+                await sleep(speed);
+
+                bars[j].style.height = val2 + "px";
+                bars[j+1].style.height = val1 + "px";
+            }
+
+            bars[j].classList.remove("compare", "swap");
+            bars[j+1].classList.remove("compare", "swap");
+        }
+
+        bars[bars.length - i - 1].classList.add("sorted");
+    }
+}
+
+/* LOAD INITIAL ARRAY */
+generateArray();
+</script>
 
 </body>
 </html>
